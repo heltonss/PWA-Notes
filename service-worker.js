@@ -1,4 +1,5 @@
 //interceptador de requisição
+let version = 14;
 const arquivos = [
     "/",
     "css/estilos.css",
@@ -36,11 +37,20 @@ const arquivos = [
 ]
 
 
-self.addEventListener('install', function () { 
-    caches.open('ceep-arquivos').then(cache => {
+self.addEventListener('install', function () {
+    console.log('instalou');
+
+})
+
+self.addEventListener('activate', function () {
+    caches.open('ceep-arquivos-' + version).then(cache => {
         cache.addAll(arquivos)
+            .then(function () {
+                caches.delete('ceep-arquivos-' + (version - 1))
+                caches.delete('ceep-arquivos')
+            })
     })
- })
+})
 
 
 self.addEventListener('fetch', function (event) {
